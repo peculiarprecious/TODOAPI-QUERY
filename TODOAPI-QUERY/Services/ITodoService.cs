@@ -5,6 +5,11 @@ namespace TODOAPI_QUERY.Services
     public interface ITodoService
     {
         Task<List<TodoResponseDTO>> GetAll(string? status = null);
+        Task<List<TodoResponseDTO>> GetTodos(
+       string? status,
+       string? priority,
+       string? sortBy,
+       string? sortOrder);
         Task<List<TodoResponseDTO>> Search(string q);
         Task<TodoResponseDTO?> GetById(int id);
         Task<TodoResponseDTO> Create(CreateTodoDTO dto);

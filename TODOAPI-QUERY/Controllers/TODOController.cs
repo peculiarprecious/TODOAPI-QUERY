@@ -41,6 +41,17 @@ namespace TODOAPI_QUERY.Controllers
                 Results = results
             });
         }
+        // GET /api/todo/filter?status=pending&sortBy=createdat&sortOrder=desc
+        [HttpGet("GetFilteredTodos")]
+        public async Task<IActionResult> GetTodos(
+            [FromQuery] string? status,
+            [FromQuery] string? priority,
+            [FromQuery] string? sortBy,
+            [FromQuery] string? sortOrder)
+        {
+            var todos = await _service.GetTodos(status, priority, sortBy, sortOrder);
+            return Ok(todos);
+        }
 
         // GET /api/todo/1
         [HttpGet("{id}")]
