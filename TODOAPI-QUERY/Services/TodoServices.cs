@@ -30,19 +30,32 @@ namespace TODOAPI_QUERY.Services
                 };
             }
 
-            // GET all — ToListAsync()
-            public async Task<List<TodoResponseDTO>> GetAll()
-            {
-                var todos = await _appDBContext.TodoItems
-                    .ToListAsync();
+        // GET all — ToListAsync()
+        public async Task<List<TodoResponseDTO>> GetAll(string? status = null)
+        {
+            var query = _appDBContext.TodoItems.AsQueryable();
 
-                return todos
-                    .Select(t => MapToResponse(t))
-                    .ToList();
+            
+            if (!string.IsNullOrEmpty(status))
+            {
+                if (status.ToLower() == "completed")
+                {
+                    query = query.Where(t => t.IsCompleted == true);
+                }
+                else if (status.ToLower() == "pending")
+                {
+                    query = query.Where(t => t.IsCompleted == false);
+                }
             }
 
-            // GET by id — FindAsync()
-            public async Task<TodoResponseDTO?> GetById(int id)
+            var todos = await query.ToListAsync();
+            return todos
+                .Select(t => MapToResponse(t))
+                .ToList();
+        }
+
+        // GET by id — FindAsync()
+        public async Task<TodoResponseDTO?> GetById(int id)
             {
                 var todo = await _appDBContext.TodoItems
                     .FindAsync(id);

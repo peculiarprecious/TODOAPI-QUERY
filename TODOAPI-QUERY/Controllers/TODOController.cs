@@ -18,9 +18,9 @@ namespace TODOAPI_QUERY.Controllers
         }
         // GET /api/todo
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? status)
         {
-            var todos = await _service.GetAll();
+            var todos = await _service.GetAll(status);
             return Ok(todos);
 
         }
