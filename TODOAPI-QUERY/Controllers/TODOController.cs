@@ -24,6 +24,24 @@ namespace TODOAPI_QUERY.Controllers
             return Ok(todos);
 
         }
+        // GET /api/todo/search?q=meeting
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchTodos([FromQuery] string? q)
+        {
+            if (string.IsNullOrWhiteSpace(q))
+            {
+                return BadRequest(BuildErrorResponse(400, "Search query cannot be empty"));
+            }
+            var results = await _service.Search(q);
+
+            return Ok(new
+            {
+                Query = q,
+                Count = results.Count,
+                Results = results
+            });
+        }
+
         // GET /api/todo/1
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)

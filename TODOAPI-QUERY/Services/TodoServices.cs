@@ -53,6 +53,21 @@ namespace TODOAPI_QUERY.Services
                 .Select(t => MapToResponse(t))
                 .ToList();
         }
+        public async Task<List<TodoResponseDTO>> Search(string q)
+        {
+            // Search in both Title and Description, then order by newest CreatedAt date first
+            var todos = await _appDBContext.TodoItems
+                .Where(t => t.Title.Contains(q) ||
+                            (t.Description != null && t.Description.Contains(q)))
+                .OrderByDescending(t => t.CreatedAt)
+                .ToListAsync();
+
+            // Map using your existing translation helper method
+            return todos
+                .Select(t => MapToResponse(t))
+                .ToList();
+        }
+
 
         // GET by id — FindAsync()
         public async Task<TodoResponseDTO?> GetById(int id)
