@@ -55,6 +55,14 @@ namespace TODOAPI_QUERY.Controllers
             var result = await _service.GetTodos(status, priority, sortBy, sortOrder, page, pageSize);
             return Ok(result);
         }
+        // GET /api/todo/stats
+        [HttpGet("stats")]
+        public async Task<ActionResult<object>> GetStatistics()
+        {
+            var stats = await _service.GetStatistics();
+            return Ok(stats);
+        }
+
 
         // GET /api/todo/1
         [HttpGet("{id}")]

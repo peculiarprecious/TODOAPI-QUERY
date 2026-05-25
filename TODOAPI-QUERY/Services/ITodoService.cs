@@ -13,6 +13,7 @@ namespace TODOAPI_QUERY.Services
              string? sortOrder,
              int page = 1,
              int pageSize = 10);
+        Task<Object> GetStatistics();
         Task<List<TodoResponseDTO>> Search(string q);
         Task<TodoResponseDTO?> GetById(int id);
         Task<TodoResponseDTO> Create(CreateTodoDTO dto);
