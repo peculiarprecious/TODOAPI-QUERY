@@ -1,0 +1,663 @@
+{
+  "info": {
+    "name": "TODOAPI-QUERY - Enhanced Todo API",
+    "_postman_id": "todoapi-query-collection",
+    "description": "Postman collection for TODOAPI-QUERY with filtering, searching, sorting and pagination",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. CRUD Operations",
+      "item": [
+        {
+          "name": "GET All Todos (Empty List)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"]
+            },
+            "description": "Get all todos. Expected: 200 OK with array"
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Todo (Valid Data)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Buy groceries\",\n  \"description\": \"Milk and eggs\",\n  \"dueDate\": \"2026-12-01T00:00:00\",\n  \"priority\": \"High\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "https://localhost:7136/api/Todo",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"]
+            },
+            "description": "Create valid todo. Expected: 201 Created"
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Todo (Invalid - Missing Title)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\",\n  \"description\": \"Missing title test\",\n  \"dueDate\": \"2026-12-01T00:00:00\",\n  \"priority\": \"High\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "https://localhost:7136/api/Todo",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"]
+            },
+            "description": "Missing title. Expected: 400 Bad Request"
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Todo (Invalid - Past DueDate)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Valid Title\",\n  \"description\": \"Past due date test\",\n  \"dueDate\": \"2020-01-01T00:00:00\",\n  \"priority\": \"Medium\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "https://localhost:7136/api/Todo",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"]
+            },
+            "description": "Past due date. Expected: 400 Bad Request"
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Todo (Invalid - Wrong Priority)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Valid Title\",\n  \"description\": \"Wrong priority test\",\n  \"dueDate\": \"2026-12-01T00:00:00\",\n  \"priority\": \"Urgent\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "https://localhost:7136/api/Todo",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"]
+            },
+            "description": "Wrong priority. Expected: 400 Bad Request"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Single Todo (Exists)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/1",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo", "1"]
+            },
+            "description": "Get todo by ID 1. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Single Todo (404 Not Found)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/999",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo", "999"]
+            },
+            "description": "Non-existent ID. Expected: 404 Not Found"
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Update Todo (Valid)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Buy groceries and cook dinner\",\n  \"description\": \"Updated description\",\n  \"isCompleted\": true,\n  \"dueDate\": \"2026-12-01T00:00:00\",\n  \"priority\": \"Medium\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/1",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo", "1"]
+            },
+            "description": "Valid update. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Update Todo (Invalid Data)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"AB\",\n  \"description\": \"Short title\",\n  \"isCompleted\": false,\n  \"dueDate\": \"2026-12-01T00:00:00\",\n  \"priority\": \"Urgent\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/1",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo", "1"]
+            },
+            "description": "Invalid update. Expected: 400 Bad Request"
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Todo (Success)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/1",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo", "1"]
+            },
+            "description": "Delete todo. Expected: 204 No Content"
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Todo (404 Not Found)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/999",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo", "999"]
+            },
+            "description": "Non-existent delete. Expected: 404 Not Found"
+          },
+          "response": []
+        }
+      ]
+    }, 
+    {
+      "name": "2. Filtering",
+      "item": [
+        {
+          "name": "GET Filtered Todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [{ "key": "Null" }]
+            },
+            "description": "Get all todos with page '1' and page size '10'. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Completed Todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilterdTodos?status=completed&page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [{ "key": "status", "value": "completed" }]
+            },
+            "description": "Filter completed todos. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Pending Todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilterdTodos?status=pending&page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [{ "key": "status", "value": "pending" }]
+            },
+            "description": "Filter pending todos. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "GET High Priority Todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?priority=high&page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [{ "key": "priority", "value": "High" }]
+            },
+            "description": "Filter high priority. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Medium Priority Todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?priority=medium&page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [{ "key": "priority", "value": "Medium" }]
+            },
+            "description": "Filter medium priority. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Low Priority Todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?priority=low&page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [{ "key": "priority", "value": "low" }]
+            },
+            "description": "Filter low priority. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Pending High Priority",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos/?status=pending&priority=High&page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [
+                { "key": "status", "value": "pending" },
+                { "key": "priority", "value": "High" }
+              ]
+            },
+            "description": "Filter pending + high priority. Expected: 200 OK"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Search",
+      "item": [
+        {
+          "name": "Search Todos by Keyword",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/search?q=meeting",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo", "search"],
+              "query": [{ "key": "q", "value": "meeting" }]
+            },
+            "description": "Search for 'meeting'. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "Search Todos - Grocery",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/search?q=grocery",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo", "search"],
+              "query": [{ "key": "q", "value": "grocery" }]
+            },
+            "description": "Search for 'grocery'. Expected: 200 OK"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Sorting",
+      "item": [
+        {
+          "name": "Sort by Title A-Z",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?sortBy=title&sortOrder=asc&page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [
+                { "key": "sortBy", "value": "title" },
+                { "key": "sortOrder", "value": "asc" }
+              ]
+            },
+            "description": "Sort by title ascending. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by Title Z-A",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?sortBy=title&sortOrder=desc&page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [
+                { "key": "sortBy", "value": "title" },
+                { "key": "sortOrder", "value": "desc" }
+              ]
+            },
+            "description": "Sort by title descending. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by DueDate Ascending",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?sortBy=duedate&sortOrder=asc&page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [
+                { "key": "sortBy", "value": "duedate" },
+                { "key": "sortOrder", "value": "asc" }
+              ]
+            },
+            "description": "Sort by due date oldest first. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by DueDate Descending",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?sortBy=duedate&sortOrder=desc&page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [
+                { "key": "sortBy", "value": "duedate" },
+                { "key": "sortOrder", "value": "desc" }
+              ]
+            },
+            "description": "Sort by due date newest first. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by Created Date",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?sortBy=createdat&sortOrder=desc&page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [
+                { "key": "sortBy", "value": "createdat" },
+                { "key": "sortOrder", "value": "desc" }
+              ]
+            },
+            "description": "Sort by created date newest first. Expected: 200 OK"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Pagination",
+      "item": [
+        {
+          "name": "Page 1 - 10 Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            },
+            "description": "Page 1, 10 items. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "Page 2 - 5 Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?page=2&pageSize=5",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [
+                { "key": "page", "value": "2" },
+                { "key": "pageSize", "value": "5" }
+              ]
+            },
+            "description": "Page 2, 5 items. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "Page 2 - 20 Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?page=2&pageSize=20",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [
+                { "key": "page", "value": "2" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            },
+            "description": "Page 2, 20 items. Expected: 200 OK"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Combined Queries",
+      "item": [
+        {
+          "name": "High Priority + Sort by DueDate + Page 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?priority=High&sortBy=duedate&sortOrder=asc&page=1&pageSize=10",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [
+                { "key": "priority", "value": "High" },
+                { "key": "sortBy", "value": "duedate" },
+                { "key": "sortOrder", "value": "asc" },
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            },
+            "description": "Combined: High priority + sort + paginate. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "Pending + Sort by Title + Page 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?status=pending&sortBy=title&sortOrder=asc&page=1&pageSize=5",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [
+                { "key": "status", "value": "pending" },
+                { "key": "sortBy", "value": "title" },
+                { "key": "sortOrder", "value": "asc" },
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "5" }
+              ]
+            },
+            "description": "Combined: Pending + sort by title + paginate. Expected: 200 OK"
+          },
+          "response": []
+        },
+        {
+          "name": "Completed High Priority + Sort by CreatedAt",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/GetFilteredTodos?status=completed&priority=High&sortBy=createdat&sortOrder=desc",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo"],
+              "query": [
+                { "key": "status", "value": "completed" },
+                { "key": "priority", "value": "High" },
+                { "key": "sortBy", "value": "createdat" },
+                { "key": "sortOrder", "value": "desc" }
+              ]
+            },
+            "description": "Combined: Completed + High priority + sort. Expected: 200 OK"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7. Statistics",
+      "item": [
+        {
+          "name": "GET Todo Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7136/api/Todo/stats",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "7136",
+              "path": ["api", "Todo", "stats"]
+            },
+            "description": "Get todo statistics. Expected: 200 OK"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
