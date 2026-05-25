@@ -323,6 +323,7 @@ GET /api/Todo?page=2&pageSize=20
   "completionRate": "40%"
 }
 ```
+![alt text](<images/Screenshot (789).png>)
 
 ## Validation Rules
 
